@@ -44,3 +44,4 @@ export const formRequestValidator = [
     return true
   })
 ]
+// gama controller paras buildings, subjects, departments and rooms

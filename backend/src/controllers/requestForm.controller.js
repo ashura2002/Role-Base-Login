@@ -127,7 +127,6 @@ export const approveARequest = async (req, res, next) => {
     }
 };
 
-
 // delete users request
 export const deleteRequest = async(req, res, next) =>{
     const {id} = req.params

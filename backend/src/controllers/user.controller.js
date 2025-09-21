@@ -86,6 +86,7 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
+// pang dashboard 
 export const getAllUserWithTotalRequest = async(req, res, next) =>{
   try {
     const usersAndTotalRequest = await Users.find({role: 'user'}).populate({
@@ -93,7 +94,7 @@ export const getAllUserWithTotalRequest = async(req, res, next) =>{
     }).populate({
       path: 'finalStatus',
       select: 'overAllStatus.status'
-    }) // select ang importanting fields para dili bloateda ang response
+    }) // select ang importanting fields para dili bloated ang response
     if(!usersAndTotalRequest) return next(new NotFound(`No Users Found`))
       res.status(200).json({message: 'Users total request', users: usersAndTotalRequest})
   } catch (error) {

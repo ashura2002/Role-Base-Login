@@ -49,7 +49,7 @@ userSchema.set('toJSON', {virtuals: true, versionKey:false,  transform: (_, ret)
 }})
 userSchema.set('toObject', {virtuals: true})
 
-// hashing password middleware
+// hashing password middleware using moongoese hooks
 userSchema.pre("save", async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt()
