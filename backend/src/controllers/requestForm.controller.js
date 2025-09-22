@@ -12,7 +12,7 @@ export const getAllRequestAdmin = async(req, res, next) =>{
         })
         res.status(200).json({
             message: listOfAllForms.length === 0? 'No Request Added Yet!': 'List Request',
-            requests: listOfAllForms.length === 0? []: listOfAllForms
+            data: listOfAllForms.length === 0? []: listOfAllForms
         })
     } catch (error) {
         next(error)
@@ -26,7 +26,7 @@ export const getAllUsersRequest = async (req, res,next) => {
         const allRequest = await FormSchema.find({user: userId})
         res.status(200).json({
             message: allRequest.length === 0? 'No Request Added Yet!': 'Request List',
-            request: allRequest.length === 0? []: allRequest
+            data: allRequest.length === 0? []: allRequest
         })
     } catch (error) {
         next(error)
@@ -67,7 +67,7 @@ export const createRequest = async(req, res, next) => {
             status:status,
             approvals:sequenceOfApprovals
         })
-    res.status(201).json({message:'Submitted Succesfully', reqeust: leaveForm})
+    res.status(201).json({message:'Submitted Succesfully', data: leaveForm})
     } catch (error) {
         next(error)
     }
@@ -121,7 +121,7 @@ export const approveARequest = async (req, res, next) => {
 
             // save the changes on databased
             await recievedRequest.save()
-            res.status(200).json({message: `The request was ${status}`, request: recievedRequest})
+            res.status(200).json({message: `The request was ${status}`, data: recievedRequest})
     } catch (error) {
         next(error)
     }
@@ -134,7 +134,7 @@ export const deleteRequest = async(req, res, next) =>{
         const removeRequest = await FormSchema.findByIdAndDelete({_id: id})
         if(!removeRequest) return next(new NotFound('Request Not Found!'))
 
-        res.status(200).json({message: 'Request Deleted Succesfully', request: removeRequest})
+        res.status(200).json({message: 'Request Deleted Succesfully', data: removeRequest})
     } catch (error) {
         next(error)
     }

@@ -24,12 +24,12 @@ export const registerAccount = async (req, res, next) => {
       role: role,
     });
     
-    res.status(201).json({ message: "User Added Successfully", newUser });
+    res.status(201).json({ message: "User Added Successfully", data: newUser });
   } catch (error) {
     console.log(error)
     next(error)
   }
-};
+}; // dapat inig gama sa user naa syay department
 
 export const login = async (req, res,next) => {
   const errorMsg = validationResult(req)
@@ -68,7 +68,7 @@ export const login = async (req, res,next) => {
     const {password:_, ...userWithoutPassword} = user.toObject()
 
 
-    res.status(200).json({ message: "Login Successfully", token, user: userWithoutPassword });
+    res.status(200).json({ message: "Login Successfully", token, data: userWithoutPassword });
   } catch (error) {
     next(error)
   }
@@ -79,7 +79,7 @@ export const getAllUsers = async (req, res, next) => {
   try {
     const allUsers = await Users.find({ role: { $in: ['user','program_head', 'hr', 'president', 'admin'] } })
     if(!allUsers) return next(new NotFound(`No Users Found`))
-    res.status(200).json({ message: "All Users", users: allUsers });
+    res.status(200).json({ message: "All Users", data: allUsers });
   } catch (error) {
     console.log(error)
     next(error) 
@@ -96,7 +96,7 @@ export const getAllUserWithTotalRequest = async(req, res, next) =>{
       select: 'overAllStatus.status'
     }) // select ang importanting fields para dili bloated ang response
     if(!usersAndTotalRequest) return next(new NotFound(`No Users Found`))
-      res.status(200).json({message: 'Users total request', users: usersAndTotalRequest})
+      res.status(200).json({message: 'Users total request', data: usersAndTotalRequest})
   } catch (error) {
     console.log(error)
     next(error)
@@ -118,7 +118,7 @@ export const editUser = async (req, res,next) => {
 
     const modifyUser = await Users.findOneAndUpdate({_id: id}, {firstName: firstName, password: hashPassword}, {new: true})
     if(!modifyUser) return res.status(404).json({message: 'User not found'})
-    res.status(200).json({message: `User with the Id of ${id} is Successfully edited`, user: modifyUser})
+    res.status(200).json({message: `User with the Id of ${id} is Successfully edited`, data: modifyUser})
   } catch (error) {
     next(error)
   }
@@ -131,7 +131,7 @@ export const deleteUser = async (req, res,next) => {
 
     const removeUser = await Users.findOneAndDelete({_id: id})
     if(!removeUser) return next(new NotFound('User not found!'))
-    res.status(200).json({ message: `User with the id of ${id} successfully deleted!`, user: removeUser });
+    res.status(200).json({ message: `User with the id of ${id} successfully deleted!`, data: removeUser });
   } catch (error) {
     next(error)
   }
@@ -144,7 +144,7 @@ export const getById = async (req, res,next) => {
 
     const getUserById = await Users.findOne({_id:id})
     if(!getUserById) return next(new NotFound('User not found'))
-    res.status(200).json({ message: `Get user by id ${id}`, user: getUserById });
+    res.status(200).json({ message: `Get user by id ${id}`, data: getUserById });
   } catch (error) {
     next(error)
   }

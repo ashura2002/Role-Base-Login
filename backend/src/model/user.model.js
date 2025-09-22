@@ -1,4 +1,4 @@
-import mongoose, { VirtualType } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
       lowercase:true,
       required: true,
     },
+    department:{type:mongoose.Schema.Types.ObjectId, ref: 'Departments'},
   },
   { timestamps: true }
 );

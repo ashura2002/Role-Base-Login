@@ -10,6 +10,7 @@ import attendanceRouter from "./routes/attendance.route.js";
 import departmentRoute from "./routes/department.route.js";
 
 
+
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
@@ -24,7 +25,6 @@ app.use("/api", userRoutes);
 app.use('/requests', formRoute);
 app.use('/employees', attendanceRouter)
 app.use('/api', departmentRoute)
-
 
 app.use((req, res, next) =>{
   next(new NotFound(`This ${req.originalUrl} path is not found!`))
