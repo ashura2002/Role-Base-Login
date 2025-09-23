@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import { BadRequest, NotFound } from "../lib/ApiError.js"
 import Departments from "../model/department.model.js"
 
+// all department 
 export const getAllDepartments = async(req, res, next) =>{
     try {
         const allDepartments = await Departments.find()
@@ -9,6 +10,11 @@ export const getAllDepartments = async(req, res, next) =>{
     } catch (error) {
         next(error)
     }
+}
+
+// all users on that department 
+export const  getAllUserOnDepartment = async(req,res,nex) =>{
+
 }
 
 export const createDepartment = async(req, res, next) =>{
