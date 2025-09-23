@@ -13,8 +13,23 @@ export const getAllDepartments = async(req, res, next) =>{
 }
 
 // all users on that department 
-export const  getAllUserOnDepartment = async(req,res,nex) =>{
-
+export const  getAllUserOnDepartment = async(req,res,next) =>{
+    const {id} = req.params
+    try {
+        if(!mongoose.Types.ObjectId.isValid(id)) return next(new BadRequest('Invalid ID'))
+        const getUserByDepartment = await Departments.findById(id).populate({
+        path:'userWithDepartment', select: 'firstName lastName fullname email -department'})
+        if(!getUserByDepartment) return next(new NotFound('User not found'))
+  
+        res.status(200).json({message: getUserByDepartment.userWithDepartment.length === 0?
+            `No users found on ${getUserByDepartment.departmentName} department`:
+            `List of user on ${getUserByDepartment.departmentName} department`,
+            data: getUserByDepartment
+        })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
 }
 
 export const createDepartment = async(req, res, next) =>{

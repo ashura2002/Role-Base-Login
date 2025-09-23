@@ -2,34 +2,39 @@ import jwt from "jsonwebtoken";
 import Users from "../model/user.model.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import ApiError, { NotFound } from "../lib/ApiError.js";
+import ApiError, { BadRequest, NotFound } from "../lib/ApiError.js";
 import {validationResult} from 'express-validator'
+import Departments from "../model/department.model.js";
 
 
 export const registerAccount = async (req, res, next) => {
   const errorMsg = validationResult(req)
   if(!errorMsg.isEmpty()) return next(new ApiError('Validation Error', 400, errorMsg.array()))
 
-  const { firstName, lastName, age, email, password, role } = req.body;
+  const { firstName, lastName, age, email, password, role, department } = req.body;
   try {
-    const existEmail = await Users.findOne({ email });  
-    if (existEmail)
-      return next(new ApiError('Email Already Exist', 409))
-    const newUser = await Users.create({
+    const existedEmail = await Users.findOne({email: email})
+    if(existedEmail) return next(new ApiError(`Can't create email already exist, try again`, 400))
+      
+    const findDepartment = await Departments.findOne({departmentName: department.toUpperCase()})
+    if(!findDepartment) return next(new NotFound('Department not found, Select other department!'))
+    const newUser = new Users({
       firstName: firstName,
-      lastName: lastName,
-      age: age,
+      lastName:lastName,
+      age:age,
       email: email,
       password: password,
       role: role,
-    });
-    
-    res.status(201).json({ message: "User Added Successfully", data: newUser });
+      department: findDepartment._id
+    })
+    await newUser.save()
+    await newUser.populate({path: 'department', select: 'departmentName descriptions'})
+    res.status(201).json({message: 'Created successfully', data:newUser})
   } catch (error) {
     console.log(error)
     next(error)
   }
-}; // dapat inig gama sa user naa syay department
+}; 
 
 export const login = async (req, res,next) => {
   const errorMsg = validationResult(req)
@@ -72,7 +77,7 @@ export const login = async (req, res,next) => {
   } catch (error) {
     next(error)
   }
-};
+}; // try to refactor use firstname and password only on login
 
 // use middleware for this and check the userRole is admin , 
 export const getAllUsers = async (req, res, next) => {
