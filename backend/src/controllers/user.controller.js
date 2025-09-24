@@ -36,48 +36,36 @@ export const registerAccount = async (req, res, next) => {
   }
 }; 
 
-export const login = async (req, res,next) => {
-  const errorMsg = validationResult(req)
-  if(!errorMsg.isEmpty()) return next(new ApiError('Validation Error', 400, errorMsg.array()))
+export const login = async(req,res,next) =>{
+  const {email, password} = req.body
+    try {
+      const user = await Users.findOne({email: email}).select('+password')
+      if(!user) return next(new NotFound('Users not found!'))
 
-  const { email, password, firstName } = req.body;
+      // compare password
+      const isPasswordIsMatch = await user.comparePassword(password)
+      if(!isPasswordIsMatch) return next(new BadRequest('Incorrect Password'))
 
-  try {
-    const user = await Users.findOne({ email }).select('+password'); // need to include pass kay by default di sya madala agis schema na validation
-    // check if user exist
-    if (!user) return next(new NotFound('Account Not Found!'));
-
-    // check if firtname exist
-    if (user.firstName !== firstName)
-      return next(new ApiError('Wrong Firstname', 404))
-
-    // check if password is beingg hash
-    const isPasswordMatch = await user.comparePassword(password); // aron ma compare sa bcrypt ang passwword gikan sa body ug password from DB
-    if (!isPasswordMatch)
-      return next(new ApiError('Incorrect Password', 401));
-
-    //assigning token
-    const token = jwt.sign(
-      {
+      // create token
+      const token = jwt.sign({
         userId: user._id,
         role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName,
         email: user.email,
+        firstName:user.firstName,
+        lastName:user.lastName,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
-
-    //  remove password to the reponse object 
-    const {password:_, ...userWithoutPassword} = user.toObject()
-
-
-    res.status(200).json({ message: "Login Successfully", token, data: userWithoutPassword });
-  } catch (error) {
-    next(error)
-  }
-}; // try to refactor use firstname and password only on login
+      process.env.JWT_SECRET,{
+        expiresIn: process.env.JWT_EXPIRES_IN
+      }
+      )
+      // remove sensitive data
+      const {password:_p, role, email:_e, ...userWithOutSensitiveData} = user.toObject()
+      res.status(200).json({message:'Login successfully', token, data: userWithOutSensitiveData})
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+}
 
 // use middleware for this and check the userRole is admin , 
 export const getAllUsers = async (req, res, next) => {
