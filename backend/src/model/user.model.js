@@ -48,7 +48,10 @@ userSchema.set('toJSON', {virtuals: true, versionKey:false,  transform: (_, ret)
   delete ret.id
   return ret
 }})
-userSchema.set('toObject', {virtuals: true})
+userSchema.set('toObject', {virtuals: true, versionKey:false,  transform: (_, ret)=>{
+  delete ret.id
+  return ret
+}})
 
 // hashing password middleware using moongoese hooks
 userSchema.pre("save", async function (next) {
