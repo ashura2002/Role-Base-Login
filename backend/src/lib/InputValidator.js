@@ -42,6 +42,10 @@ export const formRequestValidator = [
       throw new Error('Reason is required when the request type is Other.')
     }
     return true
-  })
+  }),
+]
+
+export const createBuildingValidator = [
+  body('buildingName').isLength({min: 5}).withMessage('Building name must above or equal 5 characters').notEmpty()
 ]
 // gama controller paras buildings, subjects, departments and rooms

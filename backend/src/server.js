@@ -8,6 +8,7 @@ import { errHandling } from "./middleware/errorHandlingMiddleware.js";
 import formRoute from "./routes/formRequest.route.js";
 import attendanceRouter from "./routes/attendance.route.js";
 import departmentRoute from "./routes/department.route.js";
+import buildingRoute from "./routes/building.route.js";
 
 
 
@@ -25,6 +26,7 @@ app.use("/api", userRoutes);
 app.use('/requests', formRoute);
 app.use('/employees', attendanceRouter)
 app.use('/api', departmentRoute)
+app.use('/api', buildingRoute)
 
 app.use((req, res, next) =>{
   next(new NotFound(`This ${req.originalUrl} path is not found!`))
