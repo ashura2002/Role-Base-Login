@@ -1,4 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig, } from "axios";
+import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
@@ -6,19 +6,22 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json'
     }
 })
-
 axiosInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('token');
-        if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
+        const token = localStorage.getItem("token");
+        if (token) {
+            if (typeof (config.headers as any).set === "function") {
+                (config.headers as any).set("Authorization", `Bearer ${token}`);
+            } else {
+                (config.headers as any).Authorization = `Bearer ${token}`;
+            }
         }
         return config;
     },
-    (error: AxiosError) => {
-        return Promise.reject(error)
-    }
-)
+    (error: AxiosError) => Promise.reject(error)
+);
+
+
 
 axiosInstance.interceptors.response.use(
     (response) => {
@@ -26,7 +29,7 @@ axiosInstance.interceptors.response.use(
     },
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            window.location.href = "/login";
+            window.location.href = "/";
         }
         return Promise.reject(error);
     }
