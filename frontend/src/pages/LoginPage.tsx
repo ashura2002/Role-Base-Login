@@ -1,9 +1,11 @@
 import { KeyRound, MailCheck } from "lucide-react"
 import type React from "react"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import axiosInstance from "../utils/AxiosInstance"
 import { jwtDecode } from "jwt-decode"
 import { useNavigate } from "react-router-dom"
+import LoadingContext from "../contexts/LoadingContext"
+import Swal from 'sweetalert2'
 
 interface TokenPayload {
   userId: string;
@@ -13,6 +15,10 @@ interface TokenPayload {
   role: string;
 }
 const LoginPage = () => {
+  const context = useContext(LoadingContext)
+  if (!context) return <div>Loading...</div>
+
+  const { loading, setLoading } = context
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const navigate = useNavigate()
@@ -20,6 +26,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!email || !password) return alert('Fill up all input')
+    setLoading(true)
     try {
       const res = await axiosInstance.post('/api/auth/login', {
         email: email,
@@ -38,13 +45,28 @@ const LoginPage = () => {
         } else {
           navigate('/client-homepage')
         }
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Signed in successfully"
+        });
       }
-
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
-
 
   return (
     <div className="flex items-center justify-center h-[600px]">
@@ -72,7 +94,9 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <button className="border rounded-full mt-3 p-2 cursor-pointer border-gray-400 font-medium">Login</button>
+          <button
+            disabled={loading} className={`border ${loading ? 'bg-zinc-600' : 'bg-zinc-800'} rounded-full mt-3 p-2 cursor-pointer
+             border-gray-400 font-medium`}>{loading ? 'Loading...' : 'Login'}</button>
         </form>
 
       </div>

@@ -1,26 +1,22 @@
 import { CircleUser, Menu, MoonIcon } from "lucide-react"
-import type { SetStateAction } from "react";
+import { useContext } from "react";
 import type React from "react";
+import LogoutModal from "./LogoutModal";
+import LoadingContext from "../contexts/LoadingContext";
 
 interface ToggleProps {
     isShow: boolean;
     setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface ModalProps {
-    showLogoutModal: boolean;
-    setShowLogoutModal: React.Dispatch<SetStateAction<boolean>>;
-}
 
-type HeaderProps = ToggleProps & ModalProps
+const Header = ({ setIsShow }: ToggleProps) => {
+    const modalCtx = useContext(LoadingContext)
+    if (!modalCtx) return <div>Loading....</div>
 
-const Header = ({ setIsShow, setShowLogoutModal }: HeaderProps) => {
+    const { isShowModal, setIsShowModal } = modalCtx
     const handleToggle = () => {
         setIsShow(prev => !prev)
-    }
-
-    const showModal = () => {
-        setShowLogoutModal(prev => !prev)
     }
 
     return (
@@ -32,8 +28,10 @@ const Header = ({ setIsShow, setShowLogoutModal }: HeaderProps) => {
 
             <div className="flex items-center gap-5 px-2">
                 <MoonIcon className="size-6 cursor-pointer" />
-                <CircleUser className="size-6 cursor-pointer" onClick={showModal} />
+                <CircleUser className="size-6 cursor-pointer" onClick={() => setIsShowModal(true)} />
             </div>
+
+            {isShowModal && <LogoutModal isShowModal={isShowModal} setIsShowModal={setIsShowModal} />}
         </div>
     )
 }
