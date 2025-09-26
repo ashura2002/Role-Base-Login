@@ -1,5 +1,6 @@
 import {body} from 'express-validator'
 
+export const ROLES = ['admin', 'user', 'hr', 'program_head', 'president']
 export const registerValidator = [
   body('firstName').isLength({min: 5}).withMessage('Invalid firstName').notEmpty(),
   body('lastName').isLength({min: 5}).withMessage('Invalid lastName').notEmpty(),
@@ -11,8 +12,9 @@ export const registerValidator = [
   }),
   body('email').isEmail().withMessage('Invalid email format'),
   body('password').isLength({min: 5}).withMessage('Invalid password').notEmpty(),
-  body('role').isIn(['admin' , 'user', 'hr', 'program_head', 'president']).withMessage('Role must be either admin,user, program_head, president')
-  .notEmpty()
+  body('role')
+    .notEmpty().withMessage('Role is required')
+    .isIn(ROLES).withMessage(`Role must be one of: ${ROLES.join(', ')}`)
 ]
 
 export const loginValidator = [

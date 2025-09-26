@@ -61,5 +61,5 @@ export const deleteBuilding = async(req,res,next) =>{
         next(error)
     }
 }
-
+// tuon sag cors policy 
 // populate and room sa kada building 

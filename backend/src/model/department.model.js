@@ -15,6 +15,13 @@ departmentSchema.set('toJSON', {virtuals: true, versionKey:false, transform:(_,d
     delete doc.id 
     return doc
 }})
-departmentSchema.set('toObject',{virtuals: true, versionKey:false})
+departmentSchema.set('toObject', {
+  virtuals: true,
+  versionKey: false,
+  transform: (_, doc) => {
+    delete doc.id
+    return doc
+  }
+})
 const Departments = mongoose.model('Departments', departmentSchema)
 export default Departments

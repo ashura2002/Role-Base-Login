@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
 import Users from "../model/user.model.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import ApiError, { BadRequest, NotFound } from "../lib/ApiError.js";
+import ApiError, { NotFound } from "../lib/ApiError.js";
 import {validationResult} from 'express-validator'
-import Departments from "../model/department.model.js";
+
+import { editUserService, getAllUsersService, loginService, registerService, usersWithTotalRequestService } from "../services/users.service.js";
 
 
 export const registerAccount = async (req, res, next) => {
@@ -13,23 +13,8 @@ export const registerAccount = async (req, res, next) => {
 
   const { firstName, lastName, age, email, password, role, department } = req.body;
   try {
-    const existedEmail = await Users.findOne({email: email})
-    if(existedEmail) return next(new ApiError(`Can't create email already exist, try again`, 400))
-      
-    const findDepartment = await Departments.findOne({departmentName: department.toUpperCase()})
-    if(!findDepartment) return next(new NotFound('Department not found, Select other department!'))
-    const newUser = new Users({
-      firstName: firstName,
-      lastName:lastName,
-      age:age,
-      email: email,
-      password: password,
-      role: role,
-      department: findDepartment._id
-    })
-    await newUser.save()
-    await newUser.populate({path: 'department', select: 'departmentName descriptions'})
-    res.status(201).json({message: 'Created successfully', data:newUser})
+    const createAccount = await registerService(firstName, lastName, age, email, password, role, department)
+      res.status(201).json(createAccount)
   } catch (error) {
     console.log(error)
     next(error)
@@ -39,84 +24,48 @@ export const registerAccount = async (req, res, next) => {
 export const login = async(req,res,next) =>{
   const {email, password} = req.body
     try {
-      const user = await Users.findOne({email: email}).select('+password')
-      if(!user) return next(new NotFound('Users not found!'))
-
-      // compare password
-      const isPasswordIsMatch = await user.comparePassword(password)
-      if(!isPasswordIsMatch) return next(new BadRequest('Incorrect Password'))
-
-      // create token
-      const token = jwt.sign({
-        userId: user._id,
-        role: user.role,
-        email: user.email,
-        firstName:user.firstName,
-        lastName:user.lastName,
-      },
-      process.env.JWT_SECRET,{
-        expiresIn: process.env.JWT_EXPIRES_IN
-      }
-      )
-      // remove sensitive data
-      const {password:_p, role, email:_e, ...userWithOutSensitiveData} = user.toObject()
-      res.status(200).json({message:'Login successfully', token, data: userWithOutSensitiveData})
+      const loginUser = await loginService(email, password)
+      res.status(200).json(loginUser)
     } catch (error) {
       console.log(error)
       next(error)
     }
 }
-
 // use middleware for this and check the userRole is admin , 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const allUsers = await Users.find({ role: { $in: ['user','program_head', 'hr', 'president', 'admin'] } })
-    if(!allUsers) return next(new NotFound(`No Users Found`))
-    res.status(200).json({ message: "All Users", data: allUsers });
+    const allUsers  = await getAllUsersService()
+    res.status(200).json(allUsers)
   } catch (error) {
     console.log(error)
     next(error) 
   }
 };
-
 // pang dashboard 
 export const getAllUserWithTotalRequest = async(req, res, next) =>{
   try {
-    const usersAndTotalRequest = await Users.find({role: 'user'}).populate({
-      path:'totalRequest'
-    }).populate({
-      path: 'finalStatus',
-      select: 'overAllStatus.status'
-    }) // select ang importanting fields para dili bloated ang response
-    if(!usersAndTotalRequest) return next(new NotFound(`No Users Found`))
-      res.status(200).json({message: 'Users total request', data: usersAndTotalRequest})
+    const user = await usersWithTotalRequestService()
+    res.status(200).json(user)
   } catch (error) {
     console.log(error)
     next(error)
   }
 }
 
-
 export const editUser = async (req, res,next) => {
   const errorMsg = validationResult(req)
   if(!errorMsg.isEmpty()) return next(new ApiError('Validation Error', 400, errorMsg.array()))
-
   const { firstName, password } = req.body;
   const { id } = req.params;
-  const salt = await bcrypt.genSalt()
-  const hashPassword = await bcrypt.hash(password, salt)
-
   try {
-    if(!mongoose.Types.ObjectId.isValid(id)) return next(new NotFound('Id not found'))
-
-    const modifyUser = await Users.findOneAndUpdate({_id: id}, {firstName: firstName, password: hashPassword}, {new: true})
-    if(!modifyUser) return res.status(404).json({message: 'User not found'})
-    res.status(200).json({message: `User with the Id of ${id} is Successfully edited`, data: modifyUser})
+    const user = await editUserService(id, firstName, password)
+    res.status(200).json(user)
   } catch (error) {
     next(error)
   }
 };
 
+// finish the controller segragate the logic inside the controller to the service
 export const deleteUser = async (req, res,next) => {
   const { id } = req.params;
   try {
@@ -124,7 +73,7 @@ export const deleteUser = async (req, res,next) => {
 
     const removeUser = await Users.findOneAndDelete({_id: id})
     if(!removeUser) return next(new NotFound('User not found!'))
-    res.status(200).json({ message: `User with the id of ${id} successfully deleted!`, data: removeUser });
+    res.status(200).json({ message: `User with the id of ${id} successfully deleted!`, user: removeUser });
   } catch (error) {
     next(error)
   }
@@ -137,8 +86,9 @@ export const getById = async (req, res,next) => {
 
     const getUserById = await Users.findOne({_id:id})
     if(!getUserById) return next(new NotFound('User not found'))
-    res.status(200).json({ message: `Get user by id ${id}`, data: getUserById });
+    res.status(200).json({ message: `Get user by id ${id}`, user: getUserById });
   } catch (error) {
     next(error)
   }
 };
+
