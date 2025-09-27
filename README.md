@@ -50,8 +50,6 @@ This project enables role-based login and online submission of leave forms with 
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
 
-* **Frontend:** React (TypeScript), Axios, React Router
-* **Backend:** Node.js, Express.js, MongoDB, Mongoose
 * **Authentication:** JWT, bcrypt
 * **Validation:** express-validator
 * **Architecture:** MVC + Service Layer
