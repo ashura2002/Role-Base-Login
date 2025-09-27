@@ -1,11 +1,7 @@
-import Users from "../model/user.model.js";
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import ApiError, { NotFound } from "../lib/ApiError.js";
+import ApiError from "../lib/ApiError.js";
 import {validationResult} from 'express-validator'
-
-import { editUserService, getAllUsersService, loginService, registerService, usersWithTotalRequestService } from "../services/users.service.js";
-
+import { deleteUserService, editUserService, getAllUsersService, getUserByIdService, loginService, registerService, usersWithTotalRequestService }
+from "../services/users.service.js";
 
 export const registerAccount = async (req, res, next) => {
   const errorMsg = validationResult(req)
@@ -65,15 +61,11 @@ export const editUser = async (req, res,next) => {
   }
 };
 
-// finish the controller segragate the logic inside the controller to the service
 export const deleteUser = async (req, res,next) => {
   const { id } = req.params;
   try {
-    if(!mongoose.Types.ObjectId.isValid(id)) return next(new NotFound('Id not found!'))
-
-    const removeUser = await Users.findOneAndDelete({_id: id})
-    if(!removeUser) return next(new NotFound('User not found!'))
-    res.status(200).json({ message: `User with the id of ${id} successfully deleted!`, user: removeUser });
+    const user = await deleteUserService(id)
+    res.status(200).json(user)
   } catch (error) {
     next(error)
   }
@@ -82,13 +74,9 @@ export const deleteUser = async (req, res,next) => {
 export const getById = async (req, res,next) => {
   const { id } = req.params;
   try {
-    if(!mongoose.Types.ObjectId.isValid(id)) return  next(new NotFound('Id not found!'))
-
-    const getUserById = await Users.findOne({_id:id})
-    if(!getUserById) return next(new NotFound('User not found'))
-    res.status(200).json({ message: `Get user by id ${id}`, user: getUserById });
+    const user = await getUserByIdService(id)
+    res.status(200).json(user)
   } catch (error) {
     next(error)
   }
 };
-

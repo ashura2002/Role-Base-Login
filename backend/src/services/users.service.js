@@ -25,7 +25,7 @@ export const registerService = async(firstName, lastName, age, email, password, 
     await user.save()
     await user.populate({path:'department', select:'departmentName descriptions'})
     const {password:_, ...returnWithoutPassword} = user.toObject()
-    return {message: 'Registration Successful', user: returnWithoutPassword}
+    return {message: 'Registration Successfully', user: returnWithoutPassword}
 }
 
 export const loginService = async(email, password) =>{
@@ -49,7 +49,7 @@ export const loginService = async(email, password) =>{
     )
 
     const {password:_p, role, email:_e, ...userWithSafeData} = user.toObject()
-    return {message:'Login Successful', token, user: userWithSafeData}
+    return {message:'Login Successfully', token, user: userWithSafeData}
 }
 
 export const getAllUsersService = async() =>{
@@ -78,5 +78,19 @@ export const editUserService = async(id, firstName, password) => {
         updatedFields.password = hashPassword
     }
     const modifyUser = await Users.findOneAndUpdate({_id: id}, updatedFields , {new:true})
-    return {message:'Modify Succesful', data: modifyUser}
+    return {message:'Modify Succesfully', data: modifyUser}
+}
+
+export const deleteUserService = async (id) =>{
+    if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid Id')
+    const user = await Users.findOneAndDelete({_id:id})
+    if(!user) throw new NotFound(`User not found!`)
+    return {message: 'Deleted successfully', data: user}
+}
+
+export const getUserByIdService = async(id) => {
+    if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid Id')
+    const user = await Users.findById(id)
+    if(!user) throw new NotFound('User not found!')
+    return {message: `User with the id of ${id}`, data: user}
 }
