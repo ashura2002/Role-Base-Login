@@ -16,7 +16,7 @@ const requestFormSchema = new mongoose.Schema({
     approvals:[
         {
         approvers: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
-        role:{type:String, enum:['admin', 'hr', 'president'], ref:'User'}, // sequence sa approver
+        role:{type:String, enum:['admin', 'program_head', 'hr', 'president'], ref:'User'}, // sequence sa approver
         sequence:{type:Number}, // index sa approver
         status: {type: String, enum:['Pending', 'Approved', 'Rejected'], default: 'Pending'},
         timeIn:{type: Date}

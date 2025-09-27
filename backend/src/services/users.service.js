@@ -55,14 +55,14 @@ export const loginService = async(email, password) =>{
 export const getAllUsersService = async() =>{
     const allUsers = await Users.find({ role: { $in: ['user','program_head', 'hr', 'president', 'admin'] } })
     if(!allUsers) throw new NotFound('Users not found!')
-    return {message: allUsers.length === 0? 'No Users Yet': 'All Users', data: allUsers}
+    return {message: allUsers.length === 0? 'No Users Yet': 'All Users', user: allUsers}
 }
 
 export const usersWithTotalRequestService = async() =>{
     const userTotalRequest = await Users.find({role: 'user'}).populate({path: 'department'}).populate({path:'finalStatus',
-    select:'overAllStatus.status'})
+    select:'overAllStatus.status'}).populate({path: 'totalRequest'})
     if(!userTotalRequest) throw new NotFound('Users not found!')
-    return {message: userTotalRequest.length === 0? 'No users request yet': 'Users total request', data: userTotalRequest}
+    return {message: userTotalRequest.length === 0? 'No users request yet': 'Users total request', user: userTotalRequest}
 }
 
 export const editUserService = async(id, firstName, password) => {
@@ -78,19 +78,19 @@ export const editUserService = async(id, firstName, password) => {
         updatedFields.password = hashPassword
     }
     const modifyUser = await Users.findOneAndUpdate({_id: id}, updatedFields , {new:true})
-    return {message:'Modify Succesfully', data: modifyUser}
+    return {message:'Modify Succesfully', user: modifyUser}
 }
 
 export const deleteUserService = async (id) =>{
     if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid Id')
     const user = await Users.findOneAndDelete({_id:id})
     if(!user) throw new NotFound(`User not found!`)
-    return {message: 'Deleted successfully', data: user}
+    return {message: 'Deleted successfully', user: user}
 }
 
 export const getUserByIdService = async(id) => {
     if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid Id')
     const user = await Users.findById(id)
     if(!user) throw new NotFound('User not found!')
-    return {message: `User with the id of ${id}`, data: user}
+    return {message: `User with the id of ${id}`, user: user}
 }
