@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const departmentSchema = new mongoose.Schema({
-    departmentName: {type: String, required: true, default: ''},
+    departmentName: {type: String, required: true, default: '', uppercase: true},
     descriptions: {type: String, required: true, default: ''}
 })
 

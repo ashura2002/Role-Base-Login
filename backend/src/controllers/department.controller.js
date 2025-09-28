@@ -1,12 +1,13 @@
 import mongoose from "mongoose"
 import { BadRequest, NotFound } from "../lib/ApiError.js"
 import Departments from "../model/department.model.js"
+import { createDepartmentService, deleteDepartmentService, editDepartmentService, getAllDepartmentService, getUsersByDepartment } from "../services/department.service.js"
 
 // all department 
 export const getAllDepartments = async(req, res, next) =>{
     try {
-        const allDepartments = await Departments.find()
-        res.status(200).json({message: allDepartments.length === 0? 'No Department Added': 'List Of Departments', data: allDepartments})
+        const allDepartments = await getAllDepartmentService()
+        res.status(200).json(allDepartments)
     } catch (error) {
         next(error)
     }
@@ -16,16 +17,8 @@ export const getAllDepartments = async(req, res, next) =>{
 export const  getAllUserOnDepartment = async(req,res,next) =>{
     const {id} = req.params
     try {
-        if(!mongoose.Types.ObjectId.isValid(id)) return next(new BadRequest('Invalid ID'))
-        const getUserByDepartment = await Departments.findById(id).populate({
-        path:'userWithDepartment', select: 'firstName lastName fullname email -department'})
-        if(!getUserByDepartment) return next(new NotFound('User not found'))
-  
-        res.status(200).json({message: getUserByDepartment.userWithDepartment.length === 0?
-            `No users found on ${getUserByDepartment.departmentName} department`:
-            `List of user on ${getUserByDepartment.departmentName} department`,
-            data: getUserByDepartment
-        })
+      const usersOnDepartment = await getUsersByDepartment(id)
+      res.status(200).json(usersOnDepartment)
     } catch (error) {
         console.log(error)
         next(error)
@@ -35,15 +28,8 @@ export const  getAllUserOnDepartment = async(req,res,next) =>{
 export const createDepartment = async(req, res, next) =>{
     const {departmentName,descriptions} = req.body
     try {
-        const existedDepartment = await Departments.findOne({departmentName})
-        if(existedDepartment) return next(new BadRequest('Department Already Exist'))
-
-        const department = await Departments.create({
-            departmentName: departmentName.toUpperCase(),
-            descriptions: descriptions
-        })
-
-        res.status(201).json({message: 'Created Successfully', data: department})
+        const department = await createDepartmentService(departmentName, descriptions)
+        res.status(201).json(department)
     } catch (error) {
         next(error)
     }
@@ -52,13 +38,9 @@ export const createDepartment = async(req, res, next) =>{
 export const editDepartment = async(req, res, next) => {
     const {departmentName, descriptions} = req.body
     const {departmentId} = req.params
-
     try {
-        if(!mongoose.Types.ObjectId.isValid(departmentId)) return next(new BadRequest('Invalid ID'))
-        const modifyDepartment = await Departments.findOneAndUpdate({_id: departmentId},
-             {departmentName:departmentName, descriptions:descriptions}, {new: true})
-        if(!modifyDepartment) return next(new NotFound('Department Not Found'))
-        res.status(200).json({message:'Edited Successfully', data: modifyDepartment})
+        const editedDeparment = await editDepartmentService(departmentId, departmentName, descriptions)
+        res.status(200).json(editedDeparment)
     } catch (error) {
         console.log(error)
         next(error)
@@ -68,13 +50,10 @@ export const editDepartment = async(req, res, next) => {
 export const deleteDepartment = async (req, res, next) => {
     const {departmentId} = req.params
     try {
-        if(!mongoose.Types.ObjectId.isValid(departmentId)) return next(new BadRequest('Invalid ID'))
-        const removeDepartment = await Departments.findOneAndDelete({_id: departmentId})
-        if(!removeDepartment) return next(new NotFound('Department not found!'))
-        res.status(200).json({message:'Deleted Successfully', data: removeDepartment})
+        const result = await deleteDepartmentService(departmentId)
+        res.status(200).json(result)
     } catch (error) {
         console.log(error)
         next(error)
     }
 }
-
