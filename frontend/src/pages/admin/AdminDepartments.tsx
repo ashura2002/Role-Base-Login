@@ -19,7 +19,7 @@ const AdminDepartments = () => {
       try {
         const res = await axiosInstance.get('/api/departments')
         setResponseMsg(res.data.message)
-        setDepartments(res.data.data)
+        setDepartments(res.data.departments)
       } catch (error) {
         console.error(error)
       }
@@ -30,7 +30,7 @@ const AdminDepartments = () => {
   return (
     <div>
       <div className="flex justify-center items-center p-2">
-        <h1 className="text-3xl font-medium">{responseMsg}</h1>
+        <h1 className="text-3xl font-medium uppercase">{responseMsg}</h1>
       </div>
 
       <LayoutWrapper>

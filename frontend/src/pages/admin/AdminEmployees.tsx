@@ -16,7 +16,7 @@ const AdminEmployees = () => {
     const getAllEmployees = async () => {
       try {
         const res = await axiosInstance.get('/api/users')
-        setUsers(res.data.data)
+        setUsers(res.data.user)
       } catch (error) {
         console.error(error)
       }
