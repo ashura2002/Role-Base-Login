@@ -9,7 +9,7 @@ export const getAllRequestByAdminService = async() =>{
     const request = await FormSchema.find().populate({
         path: 'user',   select: 'firstName lastName email'
     })
-    return {messaage: request.length === 0? 'No request added yet': 'List of request', requests: request}
+    return {message: request.length === 0? 'No request added yet': 'List of request', requests: request}
 }
 // client side
 export const getOwnUserRequestService = async(userId) => {
@@ -42,7 +42,7 @@ export const createRequestService = async (userId, requestType, startDate, endDa
             approvals:sequenceOfApprovals
         })
         await leaveForm.save()
-        return {messaage:'Created Successfully', requests: leaveForm}     
+        return {message:'Created Successfully', requests: leaveForm}     
 }
 
 export const approveARequestService = async(userId, status, id) => {
@@ -90,7 +90,7 @@ export const approveARequestService = async(userId, status, id) => {
 
             // save the changes on databased
             await recievedRequest.save()
-        return{messaage:`Request was ${status} successfully`, requests: recievedRequest}
+        return{message:`Request was ${status} successfully`, requests: recievedRequest}
 }
 
 export const deleteRequestService = async (id) => {

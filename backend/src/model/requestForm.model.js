@@ -29,6 +29,15 @@ const requestFormSchema = new mongoose.Schema({
     timestamps:true
 })
 
+requestFormSchema.virtual('CalculateDays').get(function(){
+  const getDays = this.endDate.getTime() - this.startDate.getTime()
+  const result = Math.floor(getDays/(1000 * 60 * 60 * 24)) + 1
+  return result
+})
+
+requestFormSchema.set('toJSON', {virtuals: true, versionKey: false})
+requestFormSchema.set('toObject', {virtuals: true, versionKey: false})
+
 
 const FormSchema = mongoose.model('Request-Form', requestFormSchema)
 export default FormSchema
