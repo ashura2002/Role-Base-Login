@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { ArrowLeft, PlusCircle, Edit, Trash2 } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import axiosInstance from "../../utils/AxiosInstance";
+import { UserContext } from "../../contexts/UserContext";
+import UserModal from "../../components/AddUsersModal";
+import DeleteConfirmation from "../../components/DeleteConfirmation";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 
-interface FormData {
+export interface FormData {
   firstName: string;
   lastName: string;
   age: number;
@@ -11,6 +18,14 @@ interface FormData {
 }
 
 const AdminUserManagement = () => {
+  const navigate = useNavigate()
+  const context = useContext(UserContext);
+  if (!context) return <div>Loading...</div>;
+
+  const { users, setUsers } = context;
+  const [showModal, setShowModal] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -19,10 +34,121 @@ const AdminUserManagement = () => {
     password: "",
     role: "",
     department: "",
-  })
-  return (
-    <div>AdminUserManagement</div>
-  )
-}
+  });
 
-export default AdminUserManagement
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const res = await axiosInstance.get("/api/users");
+        setUsers(res.data.user);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getAllUsers();
+  }, []);
+
+  const handleDelete = async () => {
+    if (!selectedUser) return;
+    try {
+      await axiosInstance.delete(`/api/users/${selectedUser}`);
+      setUsers((prev) => prev.filter((u) => u._id !== selectedUser));
+      setShowDelete(false);
+      Swal.fire({
+        title: "Deleted Successfully!",
+        icon: "success"
+      });
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Header */}
+      <div className="flex justify-between items-center px-5 py-3">
+        <ArrowLeft
+          onClick={() => navigate(-1)}
+          className="size-6 cursor-pointer hover:text-blue-600" />
+        <h1 className="font-semibold text-2xl">User Management</h1>
+        <button
+          onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 px-4 py-2 cursor-pointer border border-zinc-700 hover:border-zinc-600
+        transition ease-in-out duration-300 rounded-md"
+        >
+          <PlusCircle className="size-5" />
+          Add User
+        </button>
+      </div>
+
+      {/* Table Section */}
+      <div className="px-5">
+        <div className="overflow-x-auto border border-zinc-700">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="text-left bg-zinc-700">
+                <th className="px-6 py-3 border-r border-zinc-600 font-medium">
+                  Name
+                </th>
+                <th className="px-6 py-3 border-r border-zinc-600 font-medium">
+                  Email
+                </th>
+                <th className="px-6 py-3 border-r border-zinc-600 font-medium">
+                  Role
+                </th>
+                <th className="px-6 py-3 font-medium text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user._id} className="border-b border-zinc-700">
+                  <td className="px-6 py-1.5">{user.fullname}</td>
+                  <td className="px-6">{user.email}</td>
+                  <td className="px-6">
+                    <span className="px-3">{user.role}</span>
+                  </td>
+                  <td className="px-6 py-3 flex justify-center gap-3">
+                    <button className="rounded-md p-1.5 hover:bg-blue-100 text-blue-600">
+                      <Edit className="size-5" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedUser(user._id);
+                        setShowDelete(true);
+                      }}
+                      className="rounded-md p-1.5 hover:bg-red-100 text-red-600"
+                    >
+                      <Trash2 className="size-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Add User Modal */}
+      {showModal && (
+        <UserModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          formData={formData}
+          setFormData={setFormData}
+          setUsers={setUsers}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmation
+        show={showDelete}
+        onCancel={() => setShowDelete(false)}
+        onConfirm={handleDelete}
+        message={`Are you sure you want to delete this user?`}
+      />
+    </div>
+  );
+};
+
+export default AdminUserManagement;
+// tun an sa ang bagong approach sa delete user/ using reusable components

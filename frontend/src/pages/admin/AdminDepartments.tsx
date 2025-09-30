@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/AxiosInstance"
 import LayoutWrapper from "../../components/LayoutWrapper"
 import DepartmentCard from "../../components/DepartmentCard";
 
-interface Departments {
+export interface Departments {
   _id: string;
   departmentName: string;
   descriptions: string;

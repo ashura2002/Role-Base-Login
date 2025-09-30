@@ -7,7 +7,7 @@ export interface Users {
     age: number;
     email: string;
     role: string;
-    fullName: string;
+    fullname: string;
 }
 
 interface UserContextType {
