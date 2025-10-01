@@ -3,6 +3,7 @@ import axiosInstance from "../utils/AxiosInstance";
 import type { Departments } from "../pages/admin/AdminDepartments";
 import type { FormData } from "../pages/admin/AdminUserManagement";
 import LoadingContext from "../contexts/LoadingContext";
+import Swal from "sweetalert2";
 
 
 
@@ -46,7 +47,10 @@ const UserModal: React.FC<UserModalProps> = ({ setShowModal, setFormData, formDa
         try {
             const res = await axiosInstance.post('/api/auth/register', formData)
             console.log("Registered:", res.data);
-
+            await Swal.fire({
+                icon: 'success',
+                title: res.data.message,
+            })
             setShowModal(false);
             setUsers((prev) => [...prev, res.data.user]);
             setFormData({
@@ -58,7 +62,6 @@ const UserModal: React.FC<UserModalProps> = ({ setShowModal, setFormData, formDa
                 role: "",
                 department: "",
             });
-
         } catch (error) {
             console.error("Registration failed:", error);
         } finally {

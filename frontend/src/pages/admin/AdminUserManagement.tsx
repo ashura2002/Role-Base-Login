@@ -6,6 +6,7 @@ import UserModal from "../../components/AddUsersModal";
 import DeleteConfirmation from "../../components/DeleteConfirmation";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
+import EditUsersModal from "../../components/EditUsersModal";
 
 export interface FormData {
   firstName: string;
@@ -23,8 +24,10 @@ const AdminUserManagement = () => {
   if (!context) return <div>Loading...</div>;
 
   const { users, setUsers } = context;
-  const [showModal, setShowModal] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [editModal, setShowEditModal] = useState<boolean>(false)
+  const [showDelete, setShowDelete] = useState<boolean>(false)
+  const [editId, setEditId] = useState<string | null>(null)
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -62,6 +65,13 @@ const AdminUserManagement = () => {
       console.error("Delete failed:", error);
     }
   };
+
+  const handleEdit = async (id: string) => {
+    setShowEditModal(true)
+    const userToEdit = users.find((u) => u._id === id)
+    const userId = userToEdit?._id
+    setEditId(userId ?? null)
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -108,7 +118,11 @@ const AdminUserManagement = () => {
                     <span className="px-3">{user.role}</span>
                   </td>
                   <td className="px-6 py-3 flex justify-center gap-3">
-                    <button className="rounded-md p-1.5 hover:bg-blue-100 text-blue-600">
+                    <button
+                      onClick={() => {
+                        handleEdit(user._id)
+                      }}
+                      className="rounded-md p-1.5 hover:bg-blue-100 text-blue-600">
                       <Edit className="size-5" />
                     </button>
                     <button
@@ -146,9 +160,13 @@ const AdminUserManagement = () => {
         onConfirm={handleDelete}
         message={`Are you sure you want to delete this user?`}
       />
+
+      {editModal && (
+        <EditUsersModal editId={editId} setShowEditModal={setShowEditModal} />
+      )}
+
     </div>
   );
 };
 
 export default AdminUserManagement;
-// tun an sa ang bagong approach sa delete user/ using reusable components
