@@ -1,4 +1,4 @@
-import { UserCircle2, KeyRoundIcon, Save } from "lucide-react";
+import { UserCircle2, KeyRoundIcon, Save, X } from "lucide-react";
 import axiosInstance from "../utils/AxiosInstance";
 import type React from "react";
 import { useContext, useState } from "react";
@@ -20,6 +20,10 @@ function EditUsersModal({ editId, setShowEditModal }: EditProps) {
 
     const modifyUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        if (!firstName || !password) return Swal.fire({
+            title: `Input field can't be blank`,
+            icon: 'error'
+        })
         try {
             const res = await axiosInstance.put(`/api/users/${editId}`, {
                 firstName: firstName,
@@ -40,9 +44,16 @@ function EditUsersModal({ editId, setShowEditModal }: EditProps) {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 backdrop-blur-sm">
             <div className="bg-zinc-800 rounded-2xl shadow-lg w-full max-w-md p-6 space-y-6">
-                <h2 className="text-xl font-semibold text-center">
-                    Edit User
-                </h2>
+
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-center">
+                        Edit User
+                    </h2>
+                    <X
+                        onClick={() => setShowEditModal(false)}
+                        className="cursor-pointer size-5" />
+                </div>
+
 
                 <form className="space-y-4" onSubmit={modifyUser}>
                     {/* Firstname */}
