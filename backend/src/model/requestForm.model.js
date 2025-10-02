@@ -35,8 +35,14 @@ requestFormSchema.virtual('CalculateDays').get(function(){
   return result
 })
 
-requestFormSchema.set('toJSON', {virtuals: true, versionKey: false})
-requestFormSchema.set('toObject', {virtuals: true, versionKey: false})
+requestFormSchema.set('toJSON', {virtuals: true, versionKey: false, transform: function(_,doc){
+    delete doc.id
+    return doc
+}})
+requestFormSchema.set('toObject', {virtuals: true, versionKey: false,transform: function(_,doc){
+    delete doc.id
+    return doc
+}})
 
 
 const FormSchema = mongoose.model('Request-Form', requestFormSchema)
