@@ -6,7 +6,6 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-
 interface Approvals {
   approvers: string;
   role: string;
@@ -38,7 +37,8 @@ const AdminRequest = () => {
   const [requests, setRequests] = useState<RequestData[]>([])
   const [showDecisionModal, setDecisionModal] = useState<boolean>(false)
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
-  const [actionType, setActionType] = useState<"approve" | "reject" | null>(null);
+  const [actionType, setActionType] = useState<"approve" | "reject" | 'delete' | null>(null);
+
 
   useEffect(() => {
     const getAllRequest = async () => {
@@ -46,7 +46,6 @@ const AdminRequest = () => {
         const res = await axiosInstance.get("/requests/form/admin")
         setResponseMessage(res.data.message)
         setRequests(res.data.requests)
-        console.log('Response from API', res.data.requests)
       } catch (error) {
         console.error(error)
       }
@@ -127,7 +126,6 @@ const AdminRequest = () => {
                 <th className="border border-zinc-700 px-4 py-3 text-center font-medium">Days</th>
                 <th className="border border-zinc-700 px-4 py-3 text-center font-medium">Start Date</th>
                 <th className="border border-zinc-700 px-4 py-3 text-center font-medium">End Date</th>
-                <th className="border border-zinc-700 px-4 py-3 text-center font-medium">Overall Status</th>
                 <th className="border border-zinc-700 px-4 py-3 text-center font-medium">Action</th>
               </tr>
             </thead>
@@ -147,15 +145,6 @@ const AdminRequest = () => {
                   </td>
                   <td className=" px-4 py-3 text-center">
                     {formatDate(req.endDate, "long")}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {req.overAllStatus.status === "Approved" ? (
-                      <span className="text-green-500 font-medium">Approved</span>
-                    ) : req.overAllStatus.status === "Rejected" ? (
-                      <span className="text-red-500 font-medium">Rejected</span>
-                    ) : (
-                      <span className="text-yellow-500 font-medium">Pending</span>
-                    )}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex gap-2 justify-center">
@@ -199,7 +188,6 @@ const AdminRequest = () => {
           confirmColor={actionType === "approve" ? "green" : "red"}
         />
       )}
-
     </div>
   )
 }
