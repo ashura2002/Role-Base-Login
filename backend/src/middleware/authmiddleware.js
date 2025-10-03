@@ -20,7 +20,7 @@ export const checkIfAdmin = (req, res, next) => {
   if (!req.person) return next(new NotAuthorized('Unauthorized'))
 
   const { role } = req.person;
-  const rolesAllow = ['admin', 'hr', 'president', 'program head']  
+  const rolesAllow = ['admin', 'hr', 'president', 'program_head']  
   if (!rolesAllow.includes(role))
     return next(new NotAuthorized('Access Denied, Admins only'))
 

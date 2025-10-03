@@ -53,7 +53,7 @@ export const approveARequestService = async(userId, status, id) => {
                 
             // check if the login user is an approver
             const isAnApprover = recievedRequest.approvals.find((a)=> a.approvers.toString() === userId)
-            if(!isAnApprover) throw new NotAuthorized('You are not an approver')
+            if(!isAnApprover) throw new BadRequest('You are not an approver')
             // check if the approver has already decided
             if(isAnApprover.status !== 'Pending') throw new BadRequest('You has already decided')
             
@@ -67,7 +67,7 @@ export const approveARequestService = async(userId, status, id) => {
                 const currentApprover = recievedRequest.approvals.filter((a) => a.sequence < isAnApprover.sequence)
                 // check if the previouse approver was already decided
                 const isAlreadyDecided = currentApprover.every((a) => a.status !== 'Pending')
-                if(!isAlreadyDecided) throw new NotAuthorized('Previous approver must decided first')
+                if(!isAlreadyDecided) throw new BadRequest('Previous approver must decided first')
                 canApprove = true
             }
 
