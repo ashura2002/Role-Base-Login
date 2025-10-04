@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import axiosInstance from "../../utils/AxiosInstance"
 import LayoutWrapper from "../../components/LayoutWrapper"
 import DepartmentCard from "../../components/DepartmentCard";
 import { PlusCircleIcon } from "lucide-react";
 import AddDepartmentModal from "../../components/AddDepartmentModal";
 import Swal from "sweetalert2";
+import DeleteConfirmation from "../../components/DeleteConfirmation";
 
 export interface Departments {
   _id: string;
@@ -13,10 +14,12 @@ export interface Departments {
 }
 
 
-const AdminDepartments = () => {
+const AdminDepartments: React.FC = () => {
   const [responseMsg, setResponseMsg] = useState<string>('')
   const [departments, setDepartments] = useState<Departments[]>([])
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
+  const [showDeleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
+  const [depToDelete, setDepToDelete] = useState<string | null>(null)
 
   useEffect(() => {
     const getAllDepartments = async () => {
@@ -54,11 +57,33 @@ const AdminDepartments = () => {
         icon: "success",
         title: "Department Added Successfully"
       });
+    } catch (error: unknown | any) {
+      Swal.fire({
+        title: 'Error',
+        text: error.response?.data?.message || 'Something went wrong'
+      })
+    }
+  }
+
+  const showDeleteModal = (id: string) => {
+    setDeleteConfirmation(true)
+    const departmentToDelete = departments.find((d) => d._id === id)
+    setDepToDelete(departmentToDelete?._id ?? null)
+  }
+
+  const deleteDepartment = async () => {
+    try {
+      await axiosInstance.delete(`/api/departments/${depToDelete}`)
+      Swal.fire({
+        title: 'Success',
+        text: 'Delete Successfully'
+      })
+      setDeleteConfirmation(false)
+      setDepartments(prev => prev.filter((d) => d._id !== depToDelete))
     } catch (error) {
       console.error(error)
     }
   }
-
 
   return (
     <div>
@@ -79,7 +104,7 @@ const AdminDepartments = () => {
       <LayoutWrapper>
         {departments.map((dept) => (
           <DepartmentCard key={dept._id} departmentName={dept.departmentName}
-            descriptions={dept.descriptions} />
+            descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
         ))}
       </LayoutWrapper>
 
@@ -88,7 +113,12 @@ const AdminDepartments = () => {
         <AddDepartmentModal
           onSubmit={addDepartment} show={showAddModal} onClose={() => setShowAddModal(false)} />
       )}
-    </div>
+      {showDeleteConfirmation && (
+        <DeleteConfirmation onConfirm={deleteDepartment} onCancel={() => setDeleteConfirmation(false)}
+          show={showDeleteConfirmation} title="Delete" message="Are you sure you want to delete this department? This action
+          cannot be undone."/>
+      )}
+    </div> // edit functionality nalang
   )
 }
 
