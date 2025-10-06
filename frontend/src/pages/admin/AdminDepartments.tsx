@@ -6,6 +6,7 @@ import { PlusCircleIcon } from "lucide-react";
 import AddDepartmentModal from "../../components/AddDepartmentModal";
 import Swal from "sweetalert2";
 import DeleteConfirmation from "../../components/DeleteConfirmation";
+import EditDepartmentModal from "../../components/EditDepartmentModal";
 
 export interface Departments {
   _id: string;
@@ -19,7 +20,12 @@ const AdminDepartments: React.FC = () => {
   const [departments, setDepartments] = useState<Departments[]>([])
   const [showAddModal, setShowAddModal] = useState<boolean>(false)
   const [showDeleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
+  const [showEditDepartmentModal, setShowEditDepartmentModal] = useState<boolean>(false)
   const [depToDelete, setDepToDelete] = useState<string | null>(null)
+  const [depToEdit, setDepToEdit] = useState<string | null>(null)
+  const [departmentName, setDepartmentName] = useState<string>('')
+  const [descriptions, setDescription] = useState<string>('')
+
 
   useEffect(() => {
     const getAllDepartments = async () => {
@@ -85,6 +91,35 @@ const AdminDepartments: React.FC = () => {
     }
   }
 
+  const showEditModal = (id: string) => {
+    setShowEditDepartmentModal(true)
+    const departmentToEdit = departments.find((d) => d._id === id)
+    if (departmentToEdit) {
+      setDepToEdit(departmentToEdit._id);
+      setShowEditDepartmentModal(true);
+      setDepartmentName(departmentToEdit.departmentName)
+      setDescription(departmentToEdit.descriptions)
+    }
+  }
+
+  const editDepartment = async (data: { departmentName: string, descriptions: string }) => {
+    try {
+      await axiosInstance.put(`/api/departments/${depToEdit}`, data)
+      setDepartments(prev =>
+        prev.map((d) => d._id === depToEdit ? { ...d, departmentName: data.departmentName.toUpperCase(), descriptions: data.descriptions } : d)
+      )
+      Swal.fire({
+        title: 'Success',
+        text: 'Edited Successfully'
+      })
+      setDepartmentName('')
+      setDescription('')
+      setShowEditDepartmentModal(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div>
       <div className="flex justify-center items-center p-2">
@@ -104,6 +139,7 @@ const AdminDepartments: React.FC = () => {
       <LayoutWrapper>
         {departments.map((dept) => (
           <DepartmentCard key={dept._id} departmentName={dept.departmentName}
+            onEdit={() => showEditModal(dept._id)}
             descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
         ))}
       </LayoutWrapper>
@@ -118,7 +154,17 @@ const AdminDepartments: React.FC = () => {
           show={showDeleteConfirmation} title="Delete" message="Are you sure you want to delete this department? This action
           cannot be undone."/>
       )}
-    </div> // edit functionality nalang
+
+      {showEditDepartmentModal && (
+        <EditDepartmentModal
+          prevDepartmentName={departmentName} prevDescriptions={descriptions}
+          isOpen={showEditDepartmentModal}
+          onClose={() => setShowEditDepartmentModal(false)} onSubmit={editDepartment} />
+      )}
+
+
+
+    </div>
   )
 }
 
