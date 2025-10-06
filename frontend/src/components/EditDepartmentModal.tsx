@@ -21,7 +21,7 @@ const EditDepartmentModal: React.FC<EditModalProps> = ({ isOpen, onSubmit, onClo
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-opacity-50">
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-lg">
+            <div className=" bg-zinc-800 rounded-xl p-6 w-full max-w-md shadow-lg">
                 <h2 className="text-xl font-bold mb-4 text-center dark:text-gray-100">
                     Edit Department
                 </h2>
@@ -29,7 +29,7 @@ const EditDepartmentModal: React.FC<EditModalProps> = ({ isOpen, onSubmit, onClo
                     <div>
                         <label
                             htmlFor="departmentName"
-                            className="block text-sm font-medium mb-1 dark:text-gray-200"
+                            className="block text-sm font-medium mb-1 text-gray-200"
                         >
                             Department Name
                         </label>
@@ -40,7 +40,7 @@ const EditDepartmentModal: React.FC<EditModalProps> = ({ isOpen, onSubmit, onClo
                             value={departmentName}
                             onChange={e => setDepartmentName(e.target.value)}
                             className="w-full p-2 border rounded-md focus:outline-none focus:ring-2
-                             focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+                             focus:ring-blue-500 text-gray-200"
                             required
                         />
                     </div>
@@ -58,7 +58,7 @@ const EditDepartmentModal: React.FC<EditModalProps> = ({ isOpen, onSubmit, onClo
                             onChange={e => setDescription(e.target.value)}
                             rows={3}
                             className="w-full p-2 border rounded-md focus:outline-none focus:ring-2
-                             focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+                             focus:ring-blue-500  dark:text-gray-200"
                             required
                         />
                     </div>
@@ -66,7 +66,7 @@ const EditDepartmentModal: React.FC<EditModalProps> = ({ isOpen, onSubmit, onClo
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 rounded-md border hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                            className="px-4 py-2 rounded-md border bg-zinc-800 hover:bg-zinc-700 transition"
                         >
                             Cancel
                         </button>

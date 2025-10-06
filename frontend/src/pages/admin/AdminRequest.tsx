@@ -72,7 +72,7 @@ const AdminRequest = () => {
     } catch (error: string | unknown) {
       if (axios.isAxiosError(error)) {
         Swal.fire({
-          title: '',
+          title: '😊',
           text: error.response?.data?.message || `Can't do the action since you already decided.`
         });
       } else {
@@ -97,7 +97,7 @@ const AdminRequest = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Swal.fire({
-          title: '',
+          title: '🙁',
           text: error.response?.data?.message || `Can't do the action since you already decided.`
         });
       } else {
@@ -137,16 +137,16 @@ const AdminRequest = () => {
                   key={req._id}
                   className={index % 2 === 0 ? "bg-zinc-900" : "bg-zinc-800"}
                 >
-                  <td className=" px-4 py-3">{req.user.fullname}</td>
-                  <td className=" px-4 py-3">{req.requestType}</td>
-                  <td className=" px-4 py-3 text-center">{req.CalculateDays}</td>
-                  <td className=" px-4 py-3 text-center">
+                  <td className=" px-3 py-1">{req.user.fullname}</td>
+                  <td className=" px-3 py-1">{req.requestType}</td>
+                  <td className=" px-3 py-1 text-center">{req.CalculateDays}</td>
+                  <td className=" px-3 py-1 text-center">
                     {formatDate(req.startDate, "long")}
                   </td>
-                  <td className=" px-4 py-3 text-center">
+                  <td className=" px-3 py-1 text-center">
                     {formatDate(req.endDate, "long")}
                   </td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-3 py-1 text-center">
                     <div className="flex gap-2 justify-center">
                       {/* Reject Button */}
                       <button

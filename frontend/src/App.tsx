@@ -14,6 +14,7 @@ import ClientApplyLeavePage from "./pages/clients/ClientApplyLeavePage"
 import LoadingContext from "./contexts/LoadingContext"
 import AdminUserManagement from "./pages/admin/AdminUserManagement"
 import { UserContext, type Users } from './contexts/UserContext'
+import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -49,7 +50,7 @@ const App = () => {
                 <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
                 <Route path="/admin-request" element={<AdminRequest />} />
                 <Route path="/admin-departments" element={<AdminDepartments />} />
-
+                <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
                 <Route path="/client-homepage" element={<ClientHomepage />} />
                 <Route path="/client-request" element={<ClientRequestPage />} />
                 <Route path="/client-form" element={<ClientApplyLeavePage />} />

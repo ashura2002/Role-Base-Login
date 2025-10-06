@@ -7,6 +7,7 @@ import AddDepartmentModal from "../../components/AddDepartmentModal";
 import Swal from "sweetalert2";
 import DeleteConfirmation from "../../components/DeleteConfirmation";
 import EditDepartmentModal from "../../components/EditDepartmentModal";
+import { Link } from "react-router-dom";
 
 export interface Departments {
   _id: string;
@@ -138,12 +139,13 @@ const AdminDepartments: React.FC = () => {
 
       <LayoutWrapper>
         {departments.map((dept) => (
-          <DepartmentCard key={dept._id} departmentName={dept.departmentName}
-            onEdit={() => showEditModal(dept._id)}
-            descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
+          <Link to={`/admin-users/${dept.departmentName}`} key={dept._id} state={dept} >
+            <DepartmentCard departmentName={dept.departmentName}
+              onEdit={() => showEditModal(dept._id)}
+              descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
+          </Link>
         ))}
       </LayoutWrapper>
-
 
       {showAddModal && (
         <AddDepartmentModal
