@@ -16,6 +16,7 @@ import AdminUserManagement from "./pages/admin/AdminUserManagement"
 import { UserContext, type Users } from './contexts/UserContext'
 import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
 
+
 const App = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [isShow, setIsShow] = useState<boolean>(false)
@@ -45,12 +46,14 @@ const App = () => {
             <div className="overflow-y-auto flex-2 h-screen p-5">
               <Routes>
                 <Route path="/" element={<LoginPage />} />
+                {/* ADMIN */}
                 <Route path="/admin-homepage" element={<AdminHomepage />} />
                 <Route path="/admin-employees" element={<AdminEmployees />} />
                 <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
                 <Route path="/admin-request" element={<AdminRequest />} />
                 <Route path="/admin-departments" element={<AdminDepartments />} />
                 <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
+                {/* EMPLOYEE */}
                 <Route path="/client-homepage" element={<ClientHomepage />} />
                 <Route path="/client-request" element={<ClientRequestPage />} />
                 <Route path="/client-form" element={<ClientApplyLeavePage />} />

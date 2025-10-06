@@ -6,6 +6,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import axios from "axios";
 
+
 interface Approvals {
   approvers: string;
   role: string;
@@ -38,6 +39,7 @@ const AdminRequest = () => {
   const [showDecisionModal, setDecisionModal] = useState<boolean>(false)
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null)
   const [actionType, setActionType] = useState<"approve" | "reject" | 'delete' | null>(null);
+
 
 
   useEffect(() => {
@@ -137,7 +139,7 @@ const AdminRequest = () => {
                   key={req._id}
                   className={index % 2 === 0 ? "bg-zinc-900" : "bg-zinc-800"}
                 >
-                  <td className=" px-3 py-1">{req.user.fullname}</td>
+                  <td className=" px-3 py-1 cursor-pointer">{req.user.fullname}</td>
                   <td className=" px-3 py-1">{req.requestType}</td>
                   <td className=" px-3 py-1 text-center">{req.CalculateDays}</td>
                   <td className=" px-3 py-1 text-center">
