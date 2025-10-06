@@ -41,3 +41,5 @@ connectDB().then(() => {
     console.log(`Server running on http://localhost:${port}`);
   });
 });
+
+// check if .env was include
