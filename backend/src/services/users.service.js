@@ -59,8 +59,7 @@ export const getAllUsersService = async() =>{
 }
 
 export const usersWithTotalRequestService = async() =>{
-    const userTotalRequest = await Users.find({role: 'user'}).populate({path: 'department'}).populate({path:'finalStatus',
-    select:'overAllStatus.status'}).populate({path: 'totalRequest'})
+    const userTotalRequest = await Users.find({role: 'user'}).populate({path: 'totalRequest'}).populate({path: 'department'})
     if(!userTotalRequest) throw new NotFound('Users not found!')
     return {message: userTotalRequest.length === 0? 'No users request yet': 'Users total request', user: userTotalRequest}
 }

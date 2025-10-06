@@ -30,6 +30,7 @@ const requestFormSchema = new mongoose.Schema({
 })
 
 requestFormSchema.virtual('CalculateDays').get(function(){
+    if(!this.startDate || !this.endDate) return 0
   const getDays = this.endDate.getTime() - this.startDate.getTime()
   const result = Math.floor(getDays/(1000 * 60 * 60 * 24)) + 1
   return result
