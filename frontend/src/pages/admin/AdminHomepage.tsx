@@ -24,7 +24,6 @@ export const AdminHomepage = () => {
                 const res = await axiosInstance.get(`/api/users/total-request`)
                 setMsg(res.data.message)
                 setUsersTotalReq(res.data.user)
-                console.log(res.data)
             } catch (error) {
                 console.error(error)
             }

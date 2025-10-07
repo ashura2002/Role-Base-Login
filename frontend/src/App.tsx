@@ -15,6 +15,7 @@ import LoadingContext from "./contexts/LoadingContext"
 import AdminUserManagement from "./pages/admin/AdminUserManagement"
 import { UserContext, type Users } from './contexts/UserContext'
 import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
+import AdminBuildinManagement from "./pages/admin/AdminBuildinManagement"
 
 
 const App = () => {
@@ -53,6 +54,7 @@ const App = () => {
                 <Route path="/admin-request" element={<AdminRequest />} />
                 <Route path="/admin-departments" element={<AdminDepartments />} />
                 <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
+                <Route path="/admin-building-management" element={<AdminBuildinManagement />} />
                 {/* EMPLOYEE */}
                 <Route path="/client-homepage" element={<ClientHomepage />} />
                 <Route path="/client-request" element={<ClientRequestPage />} />
