@@ -69,13 +69,15 @@ const AdminRequest = () => {
       })
       Swal.fire({
         title: 'Success',
-        text: 'Request Approved Successfully'
+        text: 'Request Approved Successfully',
+        timer: 1000
       })
     } catch (error: string | unknown) {
       if (axios.isAxiosError(error)) {
         Swal.fire({
           title: '😊',
-          text: error.response?.data?.message || `Can't do the action since you already decided.`
+          text: error.response?.data?.message || `Can't do the action since you already decided.`,
+          timer: 1000
         });
       } else {
         Swal.fire({
@@ -94,13 +96,15 @@ const AdminRequest = () => {
       })
       Swal.fire({
         title: 'Success',
-        text: 'Request Rejected Successfully'
+        text: 'Request Rejected Successfully',
+        timer: 1000
       })
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Swal.fire({
           title: '🙁',
-          text: error.response?.data?.message || `Can't do the action since you already decided.`
+          text: error.response?.data?.message || `Can't do the action since you already decided.`,
+          timer: 1000
         });
       } else {
         Swal.fire({

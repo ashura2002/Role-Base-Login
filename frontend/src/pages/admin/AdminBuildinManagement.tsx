@@ -7,6 +7,7 @@ import DeleteConfirmation from '../../components/DeleteConfirmation';
 import Swal from 'sweetalert2';
 import AddBuildingModal from '../../components/AddBuildingModal';
 import axios from 'axios';
+import ModifyBuilding from '../../components/ModifyBuilding';
 
 export interface Building {
     buildingName: string;
@@ -17,7 +18,9 @@ const AdminBuildinManagement: React.FC = () => {
     const [buildings, setBuildings] = useState<Building[]>([])
     const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState<boolean>(false)
     const [showAddBuildingModal, setAddBuildingModal] = useState<boolean>(false)
+    const [showEditBuildingModal, setShowEditModal] = useState<boolean>(false)
     const [selectedBuildingToRemove, setSelectedBuildingToRemove] = useState<string | null>(null)
+    const [selectedBuildingToEdit, setSelectedBuildingToEdit] = useState<string | null>(null)
     const [msg, setMsg] = useState<string>('')
 
     useEffect(() => {
@@ -69,13 +72,35 @@ const AdminBuildinManagement: React.FC = () => {
         console.log(buildingToRemove?._id)
     }
 
+    const showEBModal = (id: string) => {
+        setShowEditModal(true)
+        const buildingToModify = buildings.find((b) => b._id === id)
+        setSelectedBuildingToEdit(buildingToModify?._id ?? null)
+    }
+
+    const modifyBuildingName = async (data: { buildingName: string }) => {
+        try {
+            const res = await axiosInstance.put(`/api/buildings/${selectedBuildingToEdit}`, data)
+            Swal.fire({
+                title: 'Success',
+                text: res.data.message,
+                timer: 1000
+            })
+            setShowEditModal(false)
+            setBuildings(prev => prev.map((b) => b._id === selectedBuildingToEdit ?
+                { ...b, buildingName: data.buildingName.toUpperCase() } : b))
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     const removeBuilding = async () => {
         try {
             await axiosInstance.delete(`/api/buildings/${selectedBuildingToRemove}`)
             Swal.fire({
                 title: 'Success',
                 text: 'Building remove successfully',
-                timer: 2000
+                timer: 1000
             })
             setShowDeleteConfirmationModal(false)
             setBuildings((prev) => prev.filter((b) => b._id !== selectedBuildingToRemove))
@@ -107,6 +132,7 @@ const AdminBuildinManagement: React.FC = () => {
                 <LayoutWrapper>
                     {buildings.map((b) => (
                         <BuildingCard
+                            onShowEditModal={() => showEBModal(b._id ?? '')}
                             onShow={() => showDCModal(b._id ?? '')}
                             key={b._id} buildingName={b.buildingName} />
                     ))}
@@ -124,6 +150,11 @@ const AdminBuildinManagement: React.FC = () => {
                 <AddBuildingModal show={showAddBuildingModal}
                     onAdd={addBuildings}
                     onClose={() => setAddBuildingModal(false)} />
+            )}
+
+            {showEditBuildingModal && (
+                <ModifyBuilding
+                    onEdit={modifyBuildingName} onShow={showEditBuildingModal} onClose={() => setShowEditModal(false)} />
             )}
 
         </div>

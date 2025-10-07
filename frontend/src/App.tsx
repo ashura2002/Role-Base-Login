@@ -69,3 +69,7 @@ const App = () => {
 }
 
 export default App
+// to integrate
+// delete request form users only
+// post, create form request users only
+// get user by id
