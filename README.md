@@ -145,6 +145,7 @@ project-root/
 
 ## 📌 Future Improvements
 
+* Backend code convert to Typescript
 * Add email notifications for each approval step
 * Dashboard for employees and approvers
 * Unit and integration tests for critical flows
