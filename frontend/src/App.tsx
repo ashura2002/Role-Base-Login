@@ -16,6 +16,7 @@ import AdminUserManagement from "./pages/admin/AdminUserManagement"
 import { UserContext, type Users } from './contexts/UserContext'
 import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
 import AdminBuildinManagement from "./pages/admin/AdminBuildinManagement"
+import AdminEmployeeInfo from "./pages/admin/AdminEmployeeInfo"
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
                 {/* ADMIN */}
                 <Route path="/admin-homepage" element={<AdminHomepage />} />
                 <Route path="/admin-employees" element={<AdminEmployees />} />
+                <Route path="/admin/-employees/:id" element={<AdminEmployeeInfo />} />
                 <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
                 <Route path="/admin-request" element={<AdminRequest />} />
                 <Route path="/admin-departments" element={<AdminDepartments />} />
@@ -70,6 +72,6 @@ const App = () => {
 
 export default App
 // to integrate
-// delete request form users only
+// get user by id - done
 // post, create form request users only
-// get user by id
+// delete request form users only

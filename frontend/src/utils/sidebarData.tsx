@@ -10,6 +10,6 @@ export const adminLinks = [
 
 export const clientLinks = [
     { name: 'Home', icons: <Home />, to: '/client-homepage' },
-    { name: 'Request', icons: <Notebook />, to: '/client-request' },
     { name: 'Apply Request', icons: <NotebookPenIcon />, to: '/client-form' },
+    { name: 'Request', icons: <Notebook />, to: '/client-request' },
 ]

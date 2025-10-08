@@ -3,7 +3,7 @@ import LayoutWrapper from "../../components/LayoutWrapper"
 import EmployeeCard from "../../components/EmployeeCard"
 import { useContext, useEffect } from "react"
 import axiosInstance from "../../utils/AxiosInstance"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { UserContext } from "../../contexts/UserContext"
 
 const AdminEmployees = () => {
@@ -40,9 +40,11 @@ const AdminEmployees = () => {
 
         <LayoutWrapper>
           {users.map((user) => (
-            <EmployeeCard
-              key={user._id}
-              firstName={user.firstName} lastName={user.lastName} email={user.email} role={user.role} />
+            <Link key={user._id} to={`/admin/-employees/${user._id}`}>
+              <EmployeeCard
+                firstName={user.firstName} lastName={user.lastName} email={user.email} role={user.role} />
+            </Link>
+
           ))}
         </LayoutWrapper>
 
