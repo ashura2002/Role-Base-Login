@@ -89,7 +89,7 @@ export const deleteUserService = async (id) =>{
 
 export const getUserByIdService = async(id) => {
     if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid Id')
-    const user = await Users.findById(id)
+    const user = await Users.findById(id).populate({path:'department'})
     if(!user) throw new NotFound('User not found!')
     return {message: `User with the id of ${id}`, user: user}
 }
