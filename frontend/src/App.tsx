@@ -17,6 +17,7 @@ import { UserContext, type Users } from './contexts/UserContext'
 import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
 import AdminBuildinManagement from "./pages/admin/AdminBuildinManagement"
 import AdminEmployeeInfo from "./pages/admin/AdminEmployeeInfo"
+import { RequestContext, type RequestFormInterface } from "./contexts/FormRequestContext"
 
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
   const [isShow, setIsShow] = useState<boolean>(false)
   const [isShowModal, setIsShowModal] = useState<boolean>(false)
   const [users, setUsers] = useState<Users[]>([])
+  const [requests, setRequest] = useState<RequestFormInterface[]>([])
   const location = useLocation()
 
 
@@ -45,24 +47,26 @@ const App = () => {
 
             </aside>
 
-            <div className="overflow-y-auto flex-2 h-screen p-5">
-              <Routes>
-                <Route path="/" element={<LoginPage />} />
-                {/* ADMIN */}
-                <Route path="/admin-homepage" element={<AdminHomepage />} />
-                <Route path="/admin-employees" element={<AdminEmployees />} />
-                <Route path="/admin/-employees/:id" element={<AdminEmployeeInfo />} />
-                <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
-                <Route path="/admin-request" element={<AdminRequest />} />
-                <Route path="/admin-departments" element={<AdminDepartments />} />
-                <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
-                <Route path="/admin-building-management" element={<AdminBuildinManagement />} />
-                {/* EMPLOYEE */}
-                <Route path="/client-homepage" element={<ClientHomepage />} />
-                <Route path="/client-request" element={<ClientRequestPage />} />
-                <Route path="/client-form" element={<ClientApplyLeavePage />} />
-              </Routes>
-            </div>
+            <RequestContext.Provider value={{ requests, setRequest }}>
+              <div className="overflow-y-auto flex-2 h-screen p-5">
+                <Routes>
+                  <Route path="/" element={<LoginPage />} />
+                  {/* ADMIN */}
+                  <Route path="/admin-homepage" element={<AdminHomepage />} />
+                  <Route path="/admin-employees" element={<AdminEmployees />} />
+                  <Route path="/admin/-employees/:id" element={<AdminEmployeeInfo />} />
+                  <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
+                  <Route path="/admin-request" element={<AdminRequest />} />
+                  <Route path="/admin-departments" element={<AdminDepartments />} />
+                  <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
+                  <Route path="/admin-building-management" element={<AdminBuildinManagement />} />
+                  {/* EMPLOYEE */}
+                  <Route path="/client-homepage" element={<ClientHomepage />} />
+                  <Route path="/client-form" element={<ClientApplyLeavePage />} />
+                  <Route path="/client-request" element={<ClientRequestPage />} />
+                </Routes>
+              </div>
+            </RequestContext.Provider>
           </div>
         </UserContext.Provider>
       </LoadingContext.Provider>
@@ -73,5 +77,7 @@ const App = () => {
 export default App
 // to integrate
 // get user by id - done
-// post, create form request users only
+// post, create form request users only - done
+// get own request - done
 // delete request form users only
+// design the UI 

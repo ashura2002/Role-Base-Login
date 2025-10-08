@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import LoadingContext from "../contexts/LoadingContext"
 import Swal from 'sweetalert2'
 
-interface TokenPayload {
+export interface TokenPayload {
   userId: string;
   email: string;
   firstName: string;
