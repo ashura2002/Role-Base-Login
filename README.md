@@ -1,5 +1,6 @@
 ## Request Form Management System 
-## WALA PA NAHUMAN UG REFACTOR TANAN PATI PAG BUILD SA UI
+## Other feature are still missing like notification of employee if there request was approved or rejected
+## User profile page where employee or admins can see there own details
 
 A Request Form Management System built with the MERN stack and following the MVC architecture with a dedicated service layer.
 This project enables role-based login and online submission of leave forms with a **multi-step approval workflow**.
@@ -146,12 +147,10 @@ project-root/
 ## 📌 Future Improvements
 
 * Backend code convert to Typescript
+* Added Notification every approver decide
 * Add email notifications for each approval step
 * Dashboard for employees and approvers
 * Unit and integration tests for critical flows
 * Role-based UI (different menus for Admin, HR, Program Head, President)
 
 ---
-
-## 📄 License
-This project is licensed under the MIT License.
