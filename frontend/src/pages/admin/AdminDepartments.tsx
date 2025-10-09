@@ -35,7 +35,11 @@ const AdminDepartments: React.FC = () => {
         setResponseMsg(res.data.message)
         setDepartments(res.data.departments)
       } catch (error) {
-        console.error(error)
+        Swal.fire({
+          title: 'Error',
+          text: 'Something went wrong, Try again later',
+          timer: 1000
+        })
       }
     }
     getAllDepartments()
@@ -88,7 +92,11 @@ const AdminDepartments: React.FC = () => {
       setDeleteConfirmation(false)
       setDepartments(prev => prev.filter((d) => d._id !== depToDelete))
     } catch (error) {
-      console.error(error)
+      Swal.fire({
+        title: 'Error',
+        text: 'Something went wrong, Try again later',
+        timer: 1000
+      })
     }
   }
 
@@ -117,7 +125,11 @@ const AdminDepartments: React.FC = () => {
       setDescription('')
       setShowEditDepartmentModal(false)
     } catch (error) {
-      console.error(error)
+      Swal.fire({
+        title: 'Error',
+        text: 'Something went wrong, Try again later',
+        timer: 1000
+      })
     }
   }
 
@@ -137,15 +149,23 @@ const AdminDepartments: React.FC = () => {
         </button>
       </div>
 
-      <LayoutWrapper>
-        {departments.map((dept) => (
-          <Link to={`/admin-users/${dept.departmentName}`} key={dept._id} state={dept} >
-            <DepartmentCard departmentName={dept.departmentName}
-              onEdit={() => showEditModal(dept._id)}
-              descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
-          </Link>
-        ))}
-      </LayoutWrapper>
+      {departments.length !== 0 ? (
+        <LayoutWrapper>
+          {departments.map((dept) => (
+            <Link to={`/admin-users/${dept.departmentName}`} key={dept._id} state={dept} >
+              <DepartmentCard departmentName={dept.departmentName}
+                onEdit={() => showEditModal(dept._id)}
+                descriptions={dept.descriptions} onDelete={() => showDeleteModal(dept._id)} />
+            </Link>
+          ))}
+        </LayoutWrapper>
+      ) : (<div className="flex items-center justify-center flex-col gap-6">
+        <div className="w-[400px]">
+          <img src="/images/nodata.png" alt="" />
+        </div>
+      </div>)}
+
+
 
       {showAddModal && (
         <AddDepartmentModal

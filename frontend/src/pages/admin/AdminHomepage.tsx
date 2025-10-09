@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/AxiosInstance"
-import type { Departments } from "./AdminDepartments";
-import LayoutWrapper from "../../components/LayoutWrapper";
+import type { Departments } from "./AdminDepartments"
+import LayoutWrapper from "../../components/LayoutWrapper"
 
 interface TotalRequest {
-    age: number;
+    age: number
     department?: Departments
-    email: string;
-    fullname: string;
-    role: string;
+    email: string
+    fullname: string
+    role: string
     totalRequest: number
     _id: string
 }
 
-
-export const AdminHomepage = () => {
-    const [msg, setMsg] = useState<string>('')
+const AdminHomepage = () => {
+    const [msg, setMsg] = useState<string>("")
     const [usersTotalReq, setUsersTotalReq] = useState<TotalRequest[]>([])
 
     useEffect(() => {
@@ -39,17 +38,22 @@ export const AdminHomepage = () => {
 
             <LayoutWrapper>
                 {usersTotalReq.map((u) => (
-                    <div className="border m-5 rounded-md p-3 border-gray-700 hover:border-gray-200
-                    transition ease-in-out duration-300 cursor-pointer"
-                        key={u._id}>
-                        <h1>Name: {u.fullname}</h1>
-                        <p>Age: {u.age}</p>
-                        <p>Email: {u.email}</p>
-                        <p>Role{u.role}</p>
-                        <p>Total Requests: {u.totalRequest}</p>
+                    <div
+                        key={u._id}
+                        className="bg-zinc-800 border border-gray-700 m-5 rounded-md p-4 
+                        hover:border-gray-200 hover:shadow hover:shadow-gray-500 
+                        transition duration-300 ease-in-out cursor-pointer"
+                    >
+                        <h1 className="font-semibold text-lg text-white">Name: {u.fullname}</h1>
+                        <p className="text-gray-300">Age: {u.age}</p>
+                        <p className="text-gray-300">Email: {u.email}</p>
+                        <p className="text-gray-300">Role: {u.role}</p>
+                        <p className="text-gray-300">Total Requests: {u.totalRequest}</p>
                     </div>
                 ))}
             </LayoutWrapper>
         </div>
     )
 }
+
+export default AdminHomepage

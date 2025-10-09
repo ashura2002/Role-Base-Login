@@ -45,7 +45,11 @@ const AdminUserManagement = () => {
         const res = await axiosInstance.get("/api/users");
         setUsers(res.data.user);
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Something went wrong, Try again later',
+          timer: 1000
+        })
       }
     };
     getAllUsers();
@@ -62,7 +66,11 @@ const AdminUserManagement = () => {
         icon: "success"
       });
     } catch (error) {
-      console.error("Delete failed:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Something went wrong, Try again later',
+        timer: 1000
+      })
     }
   };
 

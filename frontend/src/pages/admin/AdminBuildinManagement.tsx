@@ -128,16 +128,25 @@ const AdminBuildinManagement: React.FC = () => {
                 </button>
             </div>
 
-            <div className='p-5'>
-                <LayoutWrapper>
-                    {buildings.map((b) => (
-                        <BuildingCard
-                            onShowEditModal={() => showEBModal(b._id ?? '')}
-                            onShow={() => showDCModal(b._id ?? '')}
-                            key={b._id} buildingName={b.buildingName} />
-                    ))}
-                </LayoutWrapper>
-            </div>
+            {buildings.length !== 0 ? (
+                <div className='p-5'>
+                    <LayoutWrapper>
+                        {buildings.map((b) => (
+                            <BuildingCard
+                                onShowEditModal={() => showEBModal(b._id ?? '')}
+                                onShow={() => showDCModal(b._id ?? '')}
+                                key={b._id} buildingName={b.buildingName} />
+                        ))}
+                    </LayoutWrapper>
+                </div>
+            ) : (
+                <div className="flex items-center justify-center flex-col gap-6">
+                    <div className="w-[400px]">
+                        <img src="/images/nodata.png" alt="" />
+                    </div>
+                </div>)}
+
+
 
             {showDeleteConfirmationModal && (
                 <DeleteConfirmation

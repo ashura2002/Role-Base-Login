@@ -1,6 +1,6 @@
-import { Building2Icon, X } from 'lucide-react'
-import React, { useState } from 'react'
-import Swal from 'sweetalert2';
+import { Building2Icon, X } from "lucide-react";
+import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 interface ModifyBuildingProps {
     onShow: boolean;
@@ -8,27 +8,57 @@ interface ModifyBuildingProps {
     onEdit: (data: { buildingName: string }) => void;
 }
 
+const ModifyBuilding: React.FC<ModifyBuildingProps> = ({ onShow, onClose, onEdit }) => {
+    const [buildingName, setBuildingName] = useState<string>("");
 
+    if (!onShow) return null;
 
-const ModifyBuilding: React.FC<ModifyBuildingProps> = ({ onClose, onShow, onEdit }) => {
-    const [buildingName, setbuildingName] = useState<string>('')
-    if (!onShow) return null
+    const handleEditBuildingName = async () => {
+        if (!buildingName.trim()) {
+            return Swal.fire({
+                icon: "error",
+                title: "Empty Field",
+                text: "Building name cannot be empty.",
+                timer: 1200,
+                showConfirmButton: false,
+            });
+        }
 
-    const handleEditBuildingName = () => {
-        if (!buildingName) return Swal.fire({
-            title: 'Error',
-            text: 'Cannot be empty',
-            timer: 1000
-        })
-        onEdit({ buildingName })
-    }
+        const confirm = await Swal.fire({
+            icon: "question",
+            title: "Save Changes?",
+            text: "Do you want to update this building name?",
+            showCancelButton: true,
+            confirmButtonText: "Yes, save it!",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#2563eb",
+            background: "#1e1e1e",
+            color: "#fff",
+        });
+
+        if (confirm.isConfirmed) {
+            onEdit({ buildingName });
+            Swal.fire({
+                icon: "success",
+                title: "Updated!",
+                text: "Building name successfully updated.",
+                timer: 1200,
+                showConfirmButton: false,
+            });
+            setBuildingName("");
+            onClose();
+        }
+    };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
             <div className="bg-zinc-800 rounded-2xl shadow-xl w-full max-w-md p-6 relative">
                 {/* Close button */}
                 <button
-                    onClick={onClose}
+                    onClick={() => {
+                        setBuildingName("");
+                        onClose();
+                    }}
                     className="absolute top-3 right-3 text-zinc-400 hover:text-zinc-200 transition"
                 >
                     <X size={20} />
@@ -45,7 +75,7 @@ const ModifyBuilding: React.FC<ModifyBuildingProps> = ({ onClose, onShow, onEdit
                     <input
                         type="text"
                         value={buildingName}
-                        onChange={e => setbuildingName(e.target.value)}
+                        onChange={(e) => setBuildingName(e.target.value)}
                         placeholder="Building name..."
                         className="bg-transparent flex-1 text-zinc-100 placeholder-zinc-400 focus:outline-none"
                     />
@@ -55,19 +85,23 @@ const ModifyBuilding: React.FC<ModifyBuildingProps> = ({ onClose, onShow, onEdit
                 <div className="flex justify-end gap-3">
                     <button
                         className="bg-zinc-600 hover:bg-zinc-500 text-zinc-100 px-4 py-2 rounded-lg transition"
-                        onClick={onClose}
+                        onClick={() => {
+                            setBuildingName("");
+                            onClose();
+                        }}
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleEditBuildingName}
-                        className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition">
+                        className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition"
+                    >
                         Save
                     </button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ModifyBuilding
+export default ModifyBuilding;

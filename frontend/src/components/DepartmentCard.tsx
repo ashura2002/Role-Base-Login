@@ -1,5 +1,5 @@
-import { Edit3Icon, Trash2Icon } from "lucide-react";
-import type React from "react";
+import React from "react";
+import { Edit3, Trash2 } from "lucide-react";
 
 interface DepartmentProps {
     departmentName: string;
@@ -16,33 +16,46 @@ const DepartmentCard: React.FC<DepartmentProps> = ({
 }) => {
     return (
         <div
-            className="border border-gray-700 p-2 rounded-lg w-[300px] cursor-pointer
-      hover:border-gray-200 hover:shadow hover:shadow-gray-500 duration-300 transition ease-in-out "
+            className="bg-zinc-800 border border-zinc-800 hover:border-zinc-700
+                 hover:shadow-lg transition-all duration-300 p-5 rounded-xl 
+                 flex flex-col justify-between group w-[300px]"
         >
-            <div className="flex items-center justify-between">
-                <h1 className="font-medium text-2xl">{departmentName}</h1>
-                <div className="flex items-center gap-2">
-                    <Edit3Icon
+            {/* Header */}
+            <div className="flex items-start justify-between mb-3">
+                <h2 className="text-lg font-semibold text-zinc-100 leading-tight">
+                    {departmentName}
+                </h2>
+                <div className="flex items-center gap-2 opacity-80 group-hover:opacity-100 transition">
+                    <button
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
                             onEdit();
                         }}
-                        className="size-5 text-gray-400 cursor-pointer"
-                    />
+                        className="p-2 rounded-lg hover:bg-zinc-800 transition"
+                        title="Edit Department"
+                    >
+                        <Edit3 className="w-5 h-5 text-blue-400 hover:text-blue-300 transition" />
+                    </button>
 
-                    <Trash2Icon
+                    <button
                         onClick={(e) => {
                             e.stopPropagation();
                             e.preventDefault();
                             onDelete();
                         }}
-                        className="size-5 text-gray-400 cursor-pointer"
-                    />
+                        className="p-2 rounded-lg hover:bg-zinc-800 transition"
+                        title="Delete Department"
+                    >
+                        <Trash2 className="w-5 h-5 text-red-500 hover:text-red-400 transition" />
+                    </button>
                 </div>
             </div>
 
-            <h1>{descriptions}</h1>
+            {/* Description */}
+            <p className="text-sm text-zinc-400 leading-relaxed">
+                {descriptions || "No description provided."}
+            </p>
         </div>
     );
 };

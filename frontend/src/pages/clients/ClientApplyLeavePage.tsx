@@ -5,6 +5,7 @@ import type { TokenPayload } from "../LoginPage";
 import Swal from "sweetalert2";
 import { RequestContext } from "../../contexts/FormRequestContext";
 import LoadingContext from "../../contexts/LoadingContext";
+import { AxiosError } from "axios";
 
 
 
@@ -54,7 +55,13 @@ const ClientApplyLeavePage = () => {
         reason: "",
       })
     } catch (error) {
-      console.error(error)
+      if (error instanceof AxiosError) {
+        Swal.fire({
+          title: 'Error',
+          text: error.response?.data?.errorMessage[0].msg,
+          timer: 1000
+        })
+      }
     } finally {
       setLoading(false)
     }

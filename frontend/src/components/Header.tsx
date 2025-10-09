@@ -1,4 +1,4 @@
-import { CircleUser, Menu, MoonIcon } from "lucide-react"
+import { CircleUser, Menu} from "lucide-react"
 import { useContext } from "react";
 import type React from "react";
 import LogoutModal from "./LogoutModal";
@@ -27,7 +27,6 @@ const Header = ({ setIsShow }: ToggleProps) => {
             </div>
 
             <div className="flex items-center gap-5 px-2">
-                <MoonIcon className="size-6 cursor-pointer" />
                 <CircleUser className="size-6 cursor-pointer" onClick={() => setIsShowModal(true)} />
             </div>
 

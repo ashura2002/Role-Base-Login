@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom"
 import Header from "./components/Header"
 import { SideBar } from "./components/SideBar"
 import { adminLinks, clientLinks } from "./utils/sidebarData"
-import { AdminHomepage } from "./pages/admin/AdminHomepage"
+import AdminHomepage from "./pages/admin/AdminHomepage"
 import LoginPage from "./pages/LoginPage"
 import AdminEmployees from "./pages/admin/AdminEmployees"
 import AdminRequest from "./pages/admin/AdminRequest"
@@ -18,6 +18,7 @@ import AdminUsersOnDepartment from "./pages/admin/AdminUsersOnDepartment"
 import AdminBuildinManagement from "./pages/admin/AdminBuildinManagement"
 import AdminEmployeeInfo from "./pages/admin/AdminEmployeeInfo"
 import { RequestContext, type RequestFormInterface } from "./contexts/FormRequestContext"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 
 const App = () => {
@@ -52,18 +53,64 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<LoginPage />} />
                   {/* ADMIN */}
-                  <Route path="/admin-homepage" element={<AdminHomepage />} />
-                  <Route path="/admin-employees" element={<AdminEmployees />} />
-                  <Route path="/admin/-employees/:id" element={<AdminEmployeeInfo />} />
-                  <Route path="/admin-usermanagement" element={<AdminUserManagement />} />
-                  <Route path="/admin-request" element={<AdminRequest />} />
-                  <Route path="/admin-departments" element={<AdminDepartments />} />
-                  <Route path="/admin-users/:departmentName" element={<AdminUsersOnDepartment />} />
-                  <Route path="/admin-building-management" element={<AdminBuildinManagement />} />
+                  <Route path="/admin-homepage" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminHomepage />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-employees" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminEmployees />
+                    </ProtectedRoute>} />
+
+                  <Route path="/admin/-employees/:id" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminEmployeeInfo />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-usermanagement" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminUserManagement />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-request" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminRequest />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-departments" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminDepartments />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-users/:departmentName" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminUsersOnDepartment />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin-building-management" element={
+                    <ProtectedRoute allowRoles={['admin', 'hr', 'program_head', 'president']}>
+                      <AdminBuildinManagement />
+                    </ProtectedRoute>
+                  } />
+
+
                   {/* EMPLOYEE */}
-                  <Route path="/client-homepage" element={<ClientHomepage />} />
-                  <Route path="/client-form" element={<ClientApplyLeavePage />} />
-                  <Route path="/client-request" element={<ClientRequestPage />} />
+                  <Route path="/client-homepage" element={
+                    <ProtectedRoute allowRoles={['user']}>
+                      <ClientHomepage />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/client-form" element={
+                    <ProtectedRoute allowRoles={['user']}>
+                      <ClientApplyLeavePage />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/client-request" element={
+                    <ProtectedRoute allowRoles={['user']}>
+                      <ClientRequestPage />
+                    </ProtectedRoute>
+                  } />
                 </Routes>
               </div>
             </RequestContext.Provider>
@@ -75,9 +122,4 @@ const App = () => {
 }
 
 export default App
-// to integrate
-// get user by id - done
-// post, create form request users only - done
-// get own request - done
-// delete request form users only
-// design the UI 
+
