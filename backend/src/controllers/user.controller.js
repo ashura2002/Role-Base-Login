@@ -1,6 +1,6 @@
 import ApiError from "../lib/ApiError.js";
 import {validationResult} from 'express-validator'
-import { deleteUserService, editUserService, getAllUsersService, getUserByIdService, loginService, registerService, usersWithTotalRequestService }
+import { deleteUserService, editUserService, getAllUsersService, getCurrentAccountInfo, getUserByIdService, loginService, registerService, usersWithTotalRequestService }
 from "../services/users.service.js";
 
 export const registerAccount = async (req, res, next) => {
@@ -80,3 +80,14 @@ export const getById = async (req, res,next) => {
     next(error)
   }
 };
+
+export const getCurrentLoginAccount = async(req, res, next) => {
+  const {userId} = req.person
+    try {
+      const currentAccount = await getCurrentAccountInfo(userId)
+      res.status(200).json(currentAccount)
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+}

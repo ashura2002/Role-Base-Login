@@ -93,3 +93,10 @@ export const getUserByIdService = async(id) => {
     if(!user) throw new NotFound('User not found!')
     return {message: `User with the id of ${id}`, user: user}
 }
+
+export const getCurrentAccountInfo = async (id) => {
+    if(!mongoose.Types.ObjectId.isValid(id)) throw new BadRequest('Invalid ID')
+    const user = await Users.findOne({_id: id}).populate({path: 'department'})
+    if(!user) throw new BadRequest('Users not found')
+    return {message: `Welcome Back ${user.fullname}`, user:user}
+}

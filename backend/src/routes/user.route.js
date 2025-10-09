@@ -6,7 +6,8 @@ import {
   login,
   registerAccount,
   getById,
-  getAllUserWithTotalRequest
+  getAllUserWithTotalRequest,
+  getCurrentLoginAccount
 } from "../controllers/user.controller.js";
 import { checkIfAdmin, verifyToken } from "../middleware/authmiddleware.js";
 import {editUserValidator, loginValidator, registerValidator} from '../lib/InputValidator.js'
@@ -21,6 +22,7 @@ userRoutes.post("/auth/register",registerValidator,verifyToken, registerAccount)
 
 userRoutes.get("/users", verifyToken, checkIfAdmin, getAllUsers); // http://localhost:8000/api/users
 
+userRoutes.get('/users/current', verifyToken, getCurrentLoginAccount)
 // admin only get all users total request and overAllStatus
 userRoutes.get("/users/total-request", verifyToken, checkIfAdmin, getAllUserWithTotalRequest); // http://localhost:8000/api/users
 
@@ -28,6 +30,9 @@ userRoutes.put("/users/:id",editUserValidator, verifyToken, checkIfAdmin, editUs
 
 userRoutes.delete("/users/:id", verifyToken, checkIfAdmin, deleteUser);
 
+
+
 userRoutes.get("/users/:id", verifyToken, checkIfAdmin, getById);
+
 
 export default userRoutes;
