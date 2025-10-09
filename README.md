@@ -97,7 +97,7 @@ project-root/
 ## 📝 Approval Flow
 
 1. **Employee submits a leave request** through the frontend form
-2. Request is reviewed sequentially by:
+2. Request is approved or reject sequentially by:
 
    * Admin → HR → Program Head → President
 3. Each approver can **approve or reject**
