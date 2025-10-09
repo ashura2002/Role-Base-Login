@@ -123,3 +123,6 @@ const App = () => {
 
 export default App
 
+// for future updates kung dina tapulan
+// Other feature are still missing like notification of employee if there request was approved or rejected
+// User profile page where employee or admins can see there own details
