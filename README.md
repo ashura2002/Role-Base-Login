@@ -28,7 +28,7 @@ This project enables role-based login and online submission of leave forms with 
 * **Frontend**
 
   * Built with **React + TypeScript**
-  * Clean, modular UI with reusable components
+  * Modular UI with reusable components
   * Integration with backend REST APIs
     
   * MVC design pattern
@@ -145,7 +145,7 @@ project-root/
 ---
 
 ## 📌 Future Improvements
-
+* K A P O Y  P A G T I W A S
 * Backend code convert to Typescript
 * Added Notification every approver decide
 * Add email notifications for each approval step
